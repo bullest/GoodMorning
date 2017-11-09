@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0a0a0a</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#A02121</color>
+    <color name="colorYellow">#FAAF0F</color>
+    <color name="color优">#299F47</color>
+    <color name="color良">#EEEE00</color>
+    <color name="color轻度污染">#FF6F00</color>
+    <color name="color中度污染">#BB0000</color>
+    <color name="color重度污染">#A01047</color>
+    <color name="color严重污染">#5A0017</color>
+</resources>
