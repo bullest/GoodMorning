@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0a0a0a</color>
+    <color name="colorPrimary">#2a2a2a</color>
+    <color name="colorBackground">#0a0a0a</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#A02121</color>
     <color name="colorYellow">#FAAF0F</color>
+    <color name="colorBlue">#0490a0</color>
     <color name="color优">#299F47</color>
     <color name="color良">#EEEE00</color>
     <color name="color轻度污染">#FF6F00</color>
     <color name="color中度污染">#BB0000</color>
     <color name="color重度污染">#A01047</color>
     <color name="color严重污染">#5A0017</color>
+
+    <color name="colorTemp38">#5A0017</color>
+    <color name="colorTemp35">#d50000</color>
+    <color name="colorTemp30">#F06292</color>
+    <color name="colorTempComfHigh">#C0CA33</color>
+    <color name="colorTempComfLow">#43A047</color>
+    <color name="colorTemp10">#03A9F4</color>
+    <color name="colorTemp5">#1976D2</color>
+    <color name="colorTemp0">#283593</color>
 </resources>
