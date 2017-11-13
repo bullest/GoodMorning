@@ -31,12 +31,26 @@ public class MainActivity extends AppCompatActivity{
                     case "优":
                         mAqiCard.setCardBackgroundColor(getColor(R.color.color优));
                         break;
+                    case "良":
+                        mAqiCard.setCardBackgroundColor(getColor(R.color.color良));
+                        break;
+                    case "轻度污染":
+                        mAqiCard.setCardBackgroundColor(getColor(R.color.color轻度污染));
+                        break;
+                    case "中度污染":
+                        mAqiCard.setCardBackgroundColor(getColor(R.color.color中度污染));
+                        break;
+                    case "重度污染":
+                        mAqiCard.setCardBackgroundColor(getColor(R.color.color重度污染));
+                        break;
                     case "严重污染":
                         mAqiCard.setCardBackgroundColor(getColor(R.color.color严重污染));
                         break;
+                    default:
+                        mAqiCard.setCardBackgroundColor(getColor(R.color.color优));
                 }
 
-                aqiText.setText("" + airQuality.getAqi() + airQuality.getQuality());
+                aqiText.setText("" + airQuality.getAqi());
                 Log.d("AQI", "set AQI " + airQuality.getAqi());
             }
         });
