@@ -14,8 +14,21 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:id="@+id/card_today_tip">
+        android:layout_height="wrap_content"
+        android:id="@+id/card_today_tip"
+        android:visibility="gone"
+        android:backgroundTint="@color/colorAccent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tip_textview"
+            android:layout_margin="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            tools:text="A meeting tomorrow morning"/>
         
         
     </android.support.v7.widget.CardView>
@@ -24,14 +37,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/card_weather"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="12dp">
         <include layout="@layout/weather_content"></include>
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:id="@+id/card_aqi">
         <include layout="@layout/aqi_content"></include>
     </android.support.v7.widget.CardView>
@@ -39,6 +52,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:id="@+id/card_traffic">
 
     </android.support.v7.widget.CardView>

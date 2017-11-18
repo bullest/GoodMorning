@@ -2,13 +2,22 @@ package com.bullest.goodmorning;
 
 import android.arch.lifecycle.Observer;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 
 /**
  * Created by yunfezhang on 11/9/17.
@@ -18,10 +27,14 @@ public class MainActivity extends AppCompatActivity{
     private AllViewModel mViewModel;
     private CardView mAqiCard;
     private CardView mWeatherCard;
+    private CardView mTipCard;
     private ImageView mMaskIcon;
     private ImageView mUmbrellaIcon;
     private ImageView mConditionIcon;
     private Toolbar mToolbar;
+    private FloatingActionButton mActionButton;
+    private TextView tipView;
+    private String tip;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,8 +53,12 @@ public class MainActivity extends AppCompatActivity{
         mUmbrellaIcon = findViewById(R.id.umbrella_icon);
         mMaskIcon = findViewById(R.id.mask_icon);
         mAqiCard = findViewById(R.id.card_aqi);
+        mTipCard = findViewById(R.id.card_today_tip);
         mWeatherCard = findViewById(R.id.card_weather);
-        mViewModel = new AllViewModel();
+        mViewModel = new AllViewModel(this);
+        tipView = findViewById(R.id.tip_textview);
+
+        configTip();
 
         mViewModel.getAirQualityLiveData().observe(this, new Observer<AirQuality>() {
             @Override
@@ -88,6 +105,53 @@ public class MainActivity extends AppCompatActivity{
                 weekday.setText(forecastDay.getWeekday());
                 mWeatherCard.setCardBackgroundColor(getColor(forecastDay.getTempColor()));
                 mConditionIcon.setImageDrawable(getDrawable(forecastDay.getIcon()));
+            }
+        });
+
+        mViewModel.getTipLiveData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                if (s.isEmpty()) {
+                    mTipCard.setVisibility(View.GONE);
+                } else {
+                    tipView.setText("\uD83D\uDCA1  " + s);
+                    mTipCard.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+    }
+
+    private void configTip() {
+        mActionButton = findViewById(R.id.fab);
+        tipView = findViewById(R.id.tip_textview);
+        mTipCard.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mViewModel.setTip("");
+                Toast.makeText(MainActivity.this, "Delete the Tip", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        mActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MaterialDialog dialog = new MaterialDialog.Builder(MainActivity.this)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                EditText editText = dialog.getView().findViewById(R.id.tip_edit_text);
+                                mViewModel.setTip(editText.getText().toString());
+                            }
+                        })
+                        .customView(R.layout.tip_dialog, true)
+                        .theme(Theme.DARK)
+                        .positiveText(R.string.add)
+                        .negativeText(R.string.cancel).build();
+
+                dialog.show();
             }
         });
     }
