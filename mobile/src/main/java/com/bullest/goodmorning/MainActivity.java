@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle(getString(R.string.title));
-        mToolbar.setTitleTextColor(getColor(R.color.colorBlue));
+        mToolbar.setTitleTextColor(getColor(R.color.colorAccent));
         setSupportActionBar(mToolbar);
 
         TextView aqiText = findViewById(R.id.aqi_text);
@@ -92,8 +92,7 @@ public class MainActivity extends AppCompatActivity{
                         mAqiCard.setCardBackgroundColor(getColor(R.color.color优));
                 }
 
-                aqiText.setText("AQI: " + airQuality.getAqi());
-                Log.d("AQI", "set AQI " + airQuality.getAqi());
+                aqiText.setText(getString(R.string.aqi) + airQuality.getAqi());
             }
         });
 

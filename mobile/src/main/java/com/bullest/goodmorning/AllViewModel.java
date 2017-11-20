@@ -18,7 +18,7 @@ public class AllViewModel extends ViewModel {
 
     public AllViewModel(Context context) {
         mAqiRepository = AqiRepository.getInstance();
-        mWeatherRepository = WeatherRepository.getInstance();
+        mWeatherRepository = WeatherRepository.getInstance(context);
         mTipRepository = TipRepository.getInstance(context);
         init();
     }

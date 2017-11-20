@@ -2,6 +2,7 @@ package com.bullest.goodmorning;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -27,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WeatherRepository {
     private static final String KEY = "242df9fd0f07e1b2";
     private static final String STATION = "zmw:00000.65.WZSPD.json";
-    private String language = "CN";
+    private static String language = "CN";
     private static final Object syncLock = new Object();
     private static WeatherRepository instance;
     private Retrofit mRetrofit;
@@ -44,11 +45,16 @@ public class WeatherRepository {
         mWeatherService = mRetrofit.create(WeatherService.class);
     }
 
-    public static WeatherRepository getInstance() {
+    public static WeatherRepository getInstance(Context context) {
         synchronized (syncLock) {
             if (instance == null) {
                 instance = new WeatherRepository();
             }
+        }
+        if (context.getResources().getConfiguration().locale.getDisplayLanguage().contains("中文")) {
+            language = "CN";
+        } else {
+            language = "EN";
         }
         return instance;
     }
