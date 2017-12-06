@@ -1,5 +1,7 @@
 package com.bullest.goodmorning;
 
+import com.bullest.goodmorning.dataBean.ForcastBean;
+
 import java.util.List;
 
 import retrofit2.Call;

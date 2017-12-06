@@ -1,4 +1,4 @@
-package com.bullest.goodmorning;
+package com.bullest.goodmorning.dataBean;
 
 import java.util.List;
 

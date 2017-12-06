@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
+import com.bullest.goodmorning.dataBean.ForcastBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -14,6 +15,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +35,9 @@ public class WeatherRepository {
     private static WeatherRepository instance;
     private Retrofit mRetrofit;
     private WeatherService mWeatherService;
+    final MutableLiveData<ForecastDay> forecastDayData = new MutableLiveData<>();
+    private static long TIME_UNTIL_CACHE_IS_STALE = TimeUnit.MILLISECONDS.convert(15, TimeUnit.MINUTES);
+    private long mLastUpdateTime;
 
     public WeatherRepository() {
         Gson mGson = new GsonBuilder()
@@ -60,7 +65,10 @@ public class WeatherRepository {
     }
 
     public LiveData<ForecastDay> getForecast() {
-        final MutableLiveData<ForecastDay> data = new MutableLiveData<>();
+
+        if (!enoughTimePassed() && forecastDayData != null) {
+            return forecastDayData;
+        }
 
         mWeatherService.getForecast(KEY, language, STATION).enqueue(new Callback<ForcastBean>() {
             @Override
@@ -83,7 +91,8 @@ public class WeatherRepository {
                     forecastDay.setToday(Boolean.FALSE);
                 }
                 Log.d("Weather", "get " + forecastDay.getWeekday()+ "\'s weather");
-                data.setValue(forecastDay);
+                forecastDayData.setValue(forecastDay);
+                mLastUpdateTime = System.currentTimeMillis();
             }
 
             @Override
@@ -91,7 +100,7 @@ public class WeatherRepository {
                 Log.d("Weather", t.getMessage());
             }
         });
-        return data;
+        return forecastDayData;
     }
 
     private class ForecastDayAdapter extends TypeAdapter<ForecastDay>{
@@ -119,5 +128,13 @@ public class WeatherRepository {
             in.endObject();
             return forecastDay;
         }
+    }
+
+    protected Boolean enoughTimePassed() {
+        return enoughTimePassed(TIME_UNTIL_CACHE_IS_STALE);
+    }
+
+    protected Boolean enoughTimePassed(long timeUntilCachesIsStale) {
+        return mLastUpdateTime < System.currentTimeMillis() - timeUntilCachesIsStale;
     }
 }

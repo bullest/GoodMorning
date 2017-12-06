@@ -10,7 +10,7 @@ android {
         applicationId "com.bullest.goodmorning"
         minSdkVersion 23
         targetSdkVersion 26
-        versionCode 1
+        versionCode 4
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -23,6 +23,8 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+    productFlavors {
     }
 }
 
@@ -43,4 +45,5 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.github.bumptech.glide:glide:4.3.1'
     implementation 'com.afollestad.material-dialogs:core:0.9.5.0'
+    implementation 'com.evernote:android-job:1.2.1'
 }
