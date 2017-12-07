@@ -160,6 +160,6 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
         mViewModel.getAirQualityLiveData();
         mViewModel.getForecastDayLiveData();
-        MorningRemindJob.scheduleJob(8,49);
+        MorningRemindJob.scheduleJob(6,58);
     }
 }

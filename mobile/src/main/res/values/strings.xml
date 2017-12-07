@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Mini Weather</string>
     <string name="action_settings">Settings</string>
-    <string name="title">Hello</string>
+    <string name="title">Mini Weather</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_tip_title">Add a Tip</string>

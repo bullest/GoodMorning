@@ -12,6 +12,7 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +30,9 @@ public class AqiRepository {
     private static AqiRepository instance;
     private Retrofit mRetrofit;
     private AqiService mAqiService;
+    private static long TIME_UNTIL_CACHE_IS_STALE = TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES);
+    private long mLastUpdateTime;
+    final MutableLiveData<AirQuality> data = new MutableLiveData<>();
 
     public AqiRepository() {
         Gson mGson = new GsonBuilder()
@@ -52,13 +56,16 @@ public class AqiRepository {
 
     public LiveData<AirQuality> getAirQuality(String stationCode) {
 
-        final MutableLiveData<AirQuality> data = new MutableLiveData<>();
+        if (!enoughTimePassed() && data != null) {
+            return data;
+        }
+
         mAqiService.getAirQuality(stationCode, KEY).enqueue(new Callback<List<AirQuality>>() {
             @Override
             public void onResponse(Call<List<AirQuality>> call, Response<List<AirQuality>> response) {
                 AirQuality airQuality = response.body().get(0);
                 data.setValue(airQuality);
-                Log.d("AQI", "Get AQI " + response.toString());
+                mLastUpdateTime = System.currentTimeMillis();
             }
 
             @Override
@@ -95,5 +102,13 @@ public class AqiRepository {
             in.endObject();
             return airQuality;
         }
+    }
+
+    protected Boolean enoughTimePassed() {
+        return enoughTimePassed(TIME_UNTIL_CACHE_IS_STALE);
+    }
+
+    protected Boolean enoughTimePassed(long timeUntilCachesIsStale) {
+        return mLastUpdateTime < System.currentTimeMillis() - timeUntilCachesIsStale;
     }
 }

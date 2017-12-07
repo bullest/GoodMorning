@@ -31,26 +31,42 @@ public class MorningRemindJob extends DailyJob {
     @Override
     protected DailyJobResult onRunDailyJob(@NonNull Params params) {
         NotificationManager manager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        WeatherRepository mWeatherRepository = WeatherRepository.getInstance(getContext());
         ForecastDay day = null;
+        AirQuality airQuality = null;
+        String notificationText = "";
 
         while (day == null) {
-            day = mWeatherRepository.getForecast().getValue();
+            day = WeatherRepository.getInstance(getContext()).getForecast().getValue();
         }
-//        String aqi = "Current AQI: " + AqiRepository.getInstance().getAirQuality("1150A").getValue().getAqi();
-        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), day.getIcon());
-        Notification notification = new NotificationCompat.Builder(getContext())
-                .setContentTitle(day.getConditions())
-                .setContentText(day.getTempString())
-                .setSmallIcon(day.getIcon())
-                .setLargeIcon(icon)
-                .setColor(day.getTempColor())
-                .setStyle(new NotificationCompat.BigTextStyle().bigText("Big text"))
-                .setVisibility(VISIBILITY_PUBLIC)
-                .setSound(Uri.parse("android.resource://" + getContext().getPackageName() + "/" + R.raw.arpeggio))
-                .build();
-        manager.notify(123, notification);
-        return DailyJobResult.SUCCESS;
+
+        while (airQuality == null) {
+            airQuality = AqiRepository.getInstance().getAirQuality("1150A").getValue();
+        }
+
+        if (day != null) {
+            notificationText = day.getTempString();
+            if (airQuality != null) {
+                notificationText += "\nAQI: " + airQuality.getAqi();
+            }
+        }
+
+        if (day != null) {
+            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), day.getIcon());
+            Notification notification = new NotificationCompat.Builder(getContext())
+                    .setContentTitle(day.getConditions())
+                    .setContentText(notificationText)
+                    .setSmallIcon(day.getIcon())
+                    .setLargeIcon(icon)
+                    .setColor(getContext().getColor(day.getTempColor()))
+                    .setStyle(new NotificationCompat.BigTextStyle())
+                    .setVisibility(VISIBILITY_PUBLIC)
+                    .setSound(Uri.parse("android.resource://" + getContext().getPackageName() + "/" + R.raw.arpeggio))
+                    .build();
+            manager.notify(123, notification);
+            return DailyJobResult.SUCCESS;
+        } else {
+            return DailyJobResult.CANCEL;
+        }
     }
 
     public static void scheduleJob(int hour, int minute) {

@@ -90,7 +90,6 @@ public class WeatherRepository {
                     forecastDay.setIcon(forcast.get(1).getIcon());
                     forecastDay.setToday(Boolean.FALSE);
                 }
-                Log.d("Weather", "get " + forecastDay.getWeekday()+ "\'s weather");
                 forecastDayData.setValue(forecastDay);
                 mLastUpdateTime = System.currentTimeMillis();
             }
