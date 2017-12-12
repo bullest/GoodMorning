@@ -1,6 +1,7 @@
 package com.bullest.goodmorning;
 
 import android.arch.lifecycle.Observer;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,10 +43,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setTitle(getString(R.string.title));
-        mToolbar.setTitleTextColor(getColor(R.color.colorAccent));
-        setSupportActionBar(mToolbar);
+        configToolbar();
 
         TextView aqiText = findViewById(R.id.aqi_text);
         TextView tempText = findViewById(R.id.temp_view);
@@ -121,6 +121,32 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                break;
+            case R.id.action_about:
+                break;
+        }
+        return true;
+    }
+
+    private void configToolbar() {
+        mToolbar = findViewById(R.id.toolbar);
+        mToolbar.setTitle(getString(R.string.title));
+        mToolbar.setTitleTextColor(getColor(R.color.colorAccent));
+        setSupportActionBar(mToolbar);
+    }
+
     private void configTip() {
         mActionButton = findViewById(R.id.fab);
         tipView = findViewById(R.id.tip_textview);
@@ -160,6 +186,5 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
         mViewModel.getAirQualityLiveData();
         mViewModel.getForecastDayLiveData();
-        MorningRemindJob.scheduleJob(6,58);
     }
 }

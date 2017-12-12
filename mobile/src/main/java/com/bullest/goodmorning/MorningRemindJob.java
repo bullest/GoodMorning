@@ -34,13 +34,27 @@ public class MorningRemindJob extends DailyJob {
         ForecastDay day = null;
         AirQuality airQuality = null;
         String notificationText = "";
+        int counter1 = 0;
+        int counter2 = 0;
 
-        while (day == null) {
+        while (day == null && counter1 < 3) {
             day = WeatherRepository.getInstance(getContext()).getForecast().getValue();
+            try {
+                Thread.sleep(3*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            counter1++;
         }
 
-        while (airQuality == null) {
+        while (airQuality == null && counter2 < 3) {
             airQuality = AqiRepository.getInstance().getAirQuality("1150A").getValue();
+            try {
+                Thread.sleep(3*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            counter2++;
         }
 
         if (day != null) {
@@ -50,6 +64,12 @@ public class MorningRemindJob extends DailyJob {
             }
         }
 
+        if (!TipRepository.getInstance(getContext()).getTip().getValue().isEmpty()) {
+            notificationText += "\n" + TipRepository.getInstance(getContext()).getTip().getValue();
+        }
+
+        Log.d("Tink", notificationText);
+
         if (day != null) {
             Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), day.getIcon());
             Notification notification = new NotificationCompat.Builder(getContext())
@@ -58,7 +78,7 @@ public class MorningRemindJob extends DailyJob {
                     .setSmallIcon(day.getIcon())
                     .setLargeIcon(icon)
                     .setColor(getContext().getColor(day.getTempColor()))
-                    .setStyle(new NotificationCompat.BigTextStyle())
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                     .setVisibility(VISIBILITY_PUBLIC)
                     .setSound(Uri.parse("android.resource://" + getContext().getPackageName() + "/" + R.raw.arpeggio))
                     .build();
